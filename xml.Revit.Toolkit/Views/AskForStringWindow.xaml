@@ -1,0 +1,44 @@
+﻿<Window
+    x:Class="xml.Revit.Toolkit.Views.AskForStringWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:xml.Revit.Toolkit.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="输入内容"
+    MinWidth="450"
+    SizeToContent="WidthAndHeight"
+    Topmost="True"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="ToolWindow"
+    mc:Ignorable="d">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            x:Name="prompt"
+            Margin="5"
+            Text="输入提示关键字" />
+        <TextBox
+            x:Name="input"
+            Grid.Row="1"
+            Height="26"
+            Margin="5"
+            VerticalContentAlignment="Center"
+            Text="Revit二次开发教程"
+            TextAlignment="Center" />
+        <Button
+            x:Name="Enter"
+            Grid.Row="2"
+            Height="26"
+            Margin="5"
+            Click="EnterClick"
+            Content="确定 (Enter)"
+            IsDefault="True" />
+    </Grid>
+</Window>
