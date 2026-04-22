@@ -1,164 +1,158 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <NugetVersion>10.8.0</NugetVersion>
+        <PackageId>xml.Revit.Toolkit</PackageId>
+    </PropertyGroup>
 
-	<PropertyGroup>
-		<NugetVersion>10.7</NugetVersion>
-		<PackageId>xml.Revit.Toolkit</PackageId>
-	</PropertyGroup>
-	
-	<ItemGroup>
-		<PackageReference Include="Nice3point.Revit.Api.AdWindows" Version="$(RevitVersion).*-*" />
-		<PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*-*" />
-		<PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*-*" />
-		<PackageReference Include="Nice3point.Revit.Api.UIFramework" Version="$(RevitVersion).*-*" />
-		<PackageReference Include="Nice3point.Revit.Api.UIFrameworkServices" Version="$(RevitVersion).*-*" />
-		<PackageReference Include="Nice3point.Revit.Build.Tasks" Version="2.0.2" />
-		<PackageReference Include="System.Resources.Extensions" Version="9.0.1" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Nice3point.Revit.Api.AdWindows" Version="$(RevitVersion).*-*" />
+        <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*-*" />
+        <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*-*" />
+        <PackageReference Include="Nice3point.Revit.Api.UIFramework" Version="$(RevitVersion).*-*" />
+        <PackageReference Include="Nice3point.Revit.Api.UIFrameworkServices" Version="$(RevitVersion).*-*" />
+        <PackageReference Include="Nice3point.Revit.Sdk" Version="6.2.1" />
+        <PackageReference Include="System.Resources.Extensions" Version="9.0.1" />
+    </ItemGroup>
 
-	<PropertyGroup>
-		<UseWPF>true</UseWPF>
-		<LangVersion>latest</LangVersion>
-		<PlatformTarget>x64</PlatformTarget>
-		<ImplicitUsings>true</ImplicitUsings>
-		<UseWindowsForms>true</UseWindowsForms>
-		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
-		<Configurations>Debug R17;Debug R18;Debug R19;Debug R20;Debug R21;Debug R22;Debug R23;Debug R24;Debug R25;Debug R26;Debug R27</Configurations>
-		<Configurations>$(Configurations);Release R17;Release R18;Release R19;Release R20;Release R21;Release R22;Release R23;Release R24;Release R25;Release R26;Release R27</Configurations>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('R17'))">
-		<RevitVersion>2017</RevitVersion>
-		<TargetFramework>net48</TargetFramework>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('R18'))">
-		<RevitVersion>2018</RevitVersion>
-		<TargetFramework>net48</TargetFramework>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('R19'))">
-		<RevitVersion>2019</RevitVersion>
-		<TargetFramework>net48</TargetFramework>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('R20'))">
-		<RevitVersion>2020</RevitVersion>
-		<TargetFramework>net48</TargetFramework>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('R21'))">
-		<RevitVersion>2021</RevitVersion>
-		<TargetFramework>net48</TargetFramework>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('R22'))">
-		<RevitVersion>2022</RevitVersion>
-		<TargetFramework>net48</TargetFramework>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('R23'))">
-		<RevitVersion>2023</RevitVersion>
-		<TargetFramework>net48</TargetFramework>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('R24'))">
-		<RevitVersion>2024</RevitVersion>
-		<TargetFramework>net48</TargetFramework>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('R25'))">
-		<RevitVersion>2025</RevitVersion>
-		<TargetFramework>net8.0-windows</TargetFramework>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('R26'))">
-		<RevitVersion>2026</RevitVersion>
-		<TargetFramework>net8.0-windows</TargetFramework>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('R27'))">
-		<RevitVersion>2027</RevitVersion>
-		<TargetFramework>net10.0-windows</TargetFramework>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('Debug'))">
-		<DefineConstants>DEBUG;Debug</DefineConstants>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(Configuration.Contains('Release'))">
-		<DefineConstants>RELEASE;Release</DefineConstants>
-	</PropertyGroup>
-	<PropertyGroup>
-		<StartAction>Program</StartAction>
-		<StartProgram>C:\Program Files\Autodesk\Revit $(RevitVersion)\Revit.exe</StartProgram>
-		<StartArguments>/language ENG</StartArguments>
-	</PropertyGroup>
-	<PropertyGroup>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<PublishAddinFiles>false</PublishAddinFiles>
-		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-	</PropertyGroup>
-	
-	<PropertyGroup>
-		<StartAction>Program</StartAction>
-		<StartProgram>C:\Program Files\Autodesk\Revit $(RevitVersion)\Revit.exe</StartProgram>
-		<Copyright>广州明周科技有限公司</Copyright>
-		<Title>xml.Revit.Toolkit</Title>
-		<RepositoryType>git</RepositoryType>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-		<RepositoryUrl>https://github.com/xml-Revit/xml.Revit.Toolkit</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/xml-Revit/xml.Revit.Toolkit</PackageProjectUrl>
-		<PackageTags>revit;revitapi;xml;tookit;Revit二次开发教程</PackageTags>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-	</PropertyGroup>
+    <PropertyGroup>
+        <UseWPF>true</UseWPF>
+        <LangVersion>latest</LangVersion>
+        <PlatformTarget>x64</PlatformTarget>
+        <ImplicitUsings>true</ImplicitUsings>
+        <UseWindowsForms>true</UseWindowsForms>
+        <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+        <Configurations>Debug R17;Debug R18;Debug R19;Debug R20;Debug R21;Debug R22;Debug R23;Debug R24;Debug R25;Debug R26;Debug R27</Configurations>
+        <Configurations>$(Configurations);Release R17;Release R18;Release R19;Release R20;Release R21;Release R22;Release R23;Release R24;Release R25;Release R26;Release R27</Configurations>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R17'))">
+        <RevitVersion>2017</RevitVersion>
+        <TargetFramework>net48</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R18'))">
+        <RevitVersion>2018</RevitVersion>
+        <TargetFramework>net48</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R19'))">
+        <RevitVersion>2019</RevitVersion>
+        <TargetFramework>net48</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R20'))">
+        <RevitVersion>2020</RevitVersion>
+        <TargetFramework>net48</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R21'))">
+        <RevitVersion>2021</RevitVersion>
+        <TargetFramework>net48</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R22'))">
+        <RevitVersion>2022</RevitVersion>
+        <TargetFramework>net48</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R23'))">
+        <RevitVersion>2023</RevitVersion>
+        <TargetFramework>net48</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R24'))">
+        <RevitVersion>2024</RevitVersion>
+        <TargetFramework>net48</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R25'))">
+        <RevitVersion>2025</RevitVersion>
+        <TargetFramework>net8.0-windows</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R26'))">
+        <RevitVersion>2026</RevitVersion>
+        <TargetFramework>net8.0-windows</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R27'))">
+        <RevitVersion>2027</RevitVersion>
+        <TargetFramework>net10.0-windows</TargetFramework>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<None Include=".nuget\PackageIcon.png">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+        <DefineConstants>DEBUG;Debug</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('Release'))">
+        <DefineConstants>RELEASE;Release</DefineConstants>
+    </PropertyGroup>
 
-	<ItemGroup>
-	  <None Update="LICENSE">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
-	  <None Update="README.md">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
-	</ItemGroup>
-	
-	<ItemGroup>
-	  <Resource Include="LICENSE" />
-	</ItemGroup>
+    <PropertyGroup>
+        <StartAction>Program</StartAction>
+        <StartProgram>C:\Program Files\Autodesk\Revit $(RevitVersion)\Revit.exe</StartProgram>
+        <StartArguments>/language ENG</StartArguments>
+    </PropertyGroup>
+    <PropertyGroup>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <PublishAddinFiles>false</PublishAddinFiles>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    </PropertyGroup>
 
-	<PropertyGroup>
-		<Version>$(RevitVersion).$(NugetVersion)</Version>
-		<ProjectGuid>{D8B43751-3714-4F7D-9E30-5F9548AFCA44}</ProjectGuid>
-	</PropertyGroup>
+    <PropertyGroup>
+        <StartAction>Program</StartAction>
+        <StartProgram>C:\Program Files\Autodesk\Revit $(RevitVersion)\Revit.exe</StartProgram>
+        <Copyright>广州明周科技有限公司</Copyright>
+        <Title>xml.Revit.Toolkit</Title>
+        <RepositoryType>git</RepositoryType>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <RepositoryUrl>https://github.com/xml-Revit/xml.Revit.Toolkit</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/xml-Revit/xml.Revit.Toolkit</PackageProjectUrl>
+        <PackageTags>revit;revitapi;xml;tookit;Revit二次开发教程</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
 
-	<PropertyGroup>
-		<Authors>广州明周科技有限公司</Authors>
-		<Description>Revit快速开发工具拓展包 $(PackageId).</Description>
-		<CopyrightYears>$([System.DateTime]::Now.ToString('yyyy'))</CopyrightYears>
-	</PropertyGroup>
+    <ItemGroup>
+        <None Include=".nuget\PackageIcon.png">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
 
-	<PropertyGroup>
-		<AssemblyName>$(PackageId)$(PackageAssemblyVersion)</AssemblyName>
-		<Product>$(PackageId)</Product>
-		<Copyright>Copyright © $(CopyrightYears) $(Company)</Copyright>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageIcon>PackageIcon.png</PackageIcon>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
+    <ItemGroup>
+        <None Update="LICENSE">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Update="README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
 
-	<ItemGroup>
-	  <Resource Include=".nuget\PackageIcon.png" />
-	</ItemGroup>
-	
-	<ItemGroup>
-		<Using Include="Autodesk.Revit.Attributes" />
-		<Using Include="Autodesk.Revit.UI" />
-		<Using Include="Autodesk.Revit.DB" />
-	</ItemGroup>
-	
-	<PropertyGroup>
-		<AssemblyTitle>Revit二次开发教程</AssemblyTitle>
-		<AssemblyDescription>https://www.zedmoster.cn</AssemblyDescription>
-		<AssemblyCompany>广州明周科技有限公司</AssemblyCompany>
-		<AssemblyProduct>Revit插件</AssemblyProduct>
-		<Copyright>Copyright © 广州明周科技有限公司 2024-2025</Copyright>
-	</PropertyGroup>
-	
+    <ItemGroup>
+        <Resource Include="LICENSE" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <Version>$(RevitVersion).$(NugetVersion)</Version>
+        <ProjectGuid>{D8B43751-3714-4F7D-9E30-5F9548AFCA44}</ProjectGuid>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Authors>广州明周科技有限公司</Authors>
+        <Description>Revit快速开发工具拓展包 $(PackageId).</Description>
+        <CopyrightYears>$([System.DateTime]::Now.ToString('yyyy'))</CopyrightYears>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <AssemblyName>$(PackageId)$(PackageAssemblyVersion)</AssemblyName>
+        <Product>$(PackageId)</Product>
+        <Copyright>Copyright © $(CopyrightYears) $(Company)</Copyright>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageIcon>PackageIcon.png</PackageIcon>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Resource Include=".nuget\PackageIcon.png" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <AssemblyTitle>Revit二次开发教程</AssemblyTitle>
+        <AssemblyDescription>https://www.zedmoster.cn</AssemblyDescription>
+        <AssemblyCompany>广州明周科技有限公司</AssemblyCompany>
+        <AssemblyProduct>Revit插件</AssemblyProduct>
+        <Copyright>Copyright © 广州明周科技有限公司 2024-2025</Copyright>
+    </PropertyGroup>
 </Project>

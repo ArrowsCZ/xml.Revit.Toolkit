@@ -1,4 +1,4 @@
-﻿/* 作    者: xml
+/* 作    者: xml
 ** 创建时间: 2024/2/16 20:26:06
 **
 ** Copyright 2024 by zedmoster
@@ -10,28 +10,27 @@
 ** documentation.
 */
 
-namespace xml.Revit.Toolkit.RevitTask
+namespace xml.Revit.Toolkit.RevitTask;
+
+/// <summary>
+/// Interface to run code in Revit Context
+/// </summary>
+public interface IRevitTask
 {
     /// <summary>
-    /// Interface to run code in Revit Context
+    /// Has Initialized RevitTask
     /// </summary>
-    public interface IRevitTask
-    {
-        /// <summary>
-        /// Has Initialized RevitTask
-        /// </summary>
-        bool HasInitialized { get; }
+    bool HasInitialized { get; }
 
-        /// <summary>
-        /// Run code in Revit context.
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="function"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public Task<TResult> RunAsync<TResult>(
-            Func<UIApplication, TResult> function,
-            CancellationToken cancellationToken
-        );
-    }
+    /// <summary>
+    /// Run code in Revit context.
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    /// <param name="function"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public Task<TResult> RunAsync<TResult>(
+        Func<UIApplication, TResult> function,
+        CancellationToken cancellationToken
+    );
 }

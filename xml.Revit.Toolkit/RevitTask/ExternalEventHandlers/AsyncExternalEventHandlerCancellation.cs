@@ -1,4 +1,4 @@
-﻿/* 作    者: xml
+/* 作    者: xml
 ** 创建时间: 2024/2/16 20:26:06
 **
 ** Copyright 2024 by zedmoster
@@ -10,76 +10,74 @@
 ** documentation.
 */
 
-namespace xml.Revit.Toolkit.RevitTask.ExternalEventHandlers
+namespace xml.Revit.Toolkit.RevitTask.ExternalEventHandlers;
+
+/// <summary>
+/// AsyncExternalEventHandlerCancellation
+/// </summary>
+/// <typeparam name="TResult"></typeparam>
+/// <remarks>
+/// AsyncExternalEventHandlerCancellation
+/// </remarks>
+/// <param name="function"></param>
+/// <param name="cancellationToken"></param>
+public class AsyncExternalEventHandlerCancellation<TResult>(
+    Func<UIApplication, TResult> function,
+    CancellationToken cancellationToken
+) : IExternalEventHandler, IDisposable
 {
+    private readonly TaskCompletionSourceCancellation<TResult> _tcs = new(cancellationToken);
+
     /// <summary>
-    /// AsyncExternalEventHandlerCancellation
+    /// AsyncResult
     /// </summary>
-    /// <typeparam name="TResult"></typeparam>
-    /// <remarks>
-    /// AsyncExternalEventHandlerCancellation
-    /// </remarks>
-    /// <param name="function"></param>
-    /// <param name="cancellationToken"></param>
-    public class AsyncExternalEventHandlerCancellation<TResult>(
-        Func<UIApplication, TResult> function,
-        CancellationToken cancellationToken
-    ) : IExternalEventHandler, IDisposable
+    /// <returns></returns>
+    public Task<TResult> AsyncResult()
     {
-        private readonly Func<UIApplication, TResult> function = function;
-        private readonly TaskCompletionSourceCancellation<TResult> tcs = new(cancellationToken);
+        return _tcs.Task;
+    }
 
-        /// <summary>
-        /// AsyncResult
-        /// </summary>
-        /// <returns></returns>
-        public Task<TResult> AsyncResult()
+    /// <summary>
+    /// This method is called to handle the external event.
+    /// </summary>
+    /// <param name="uiapp"></param>
+    public void Execute(UIApplication uiapp)
+    {
+        try
         {
-            return tcs.Task;
-        }
+            if (AsyncResult().IsCompleted)
+                return;
 
-        /// <summary>
-        /// This method is called to handle the external event.
-        /// </summary>
-        /// <param name="uiapp"></param>
-        public void Execute(UIApplication uiapp)
+            var result = function.Invoke(uiapp);
+            _tcs.TrySetResult(result);
+        }
+        catch (Exception ex)
         {
-            try
-            {
-                if (AsyncResult().IsCompleted)
-                    return;
-
-                var result = function.Invoke(uiapp);
-                tcs.TrySetResult(result);
-            }
-            catch (Exception ex)
-            {
-                tcs.TrySetException(ex);
-            }
+            _tcs.TrySetException(ex);
         }
+    }
 
-        /// <summary>
-        /// String identification of the event handler.
-        /// </summary>
-        public string GetName()
-        {
-            return GetType().Name;
-        }
+    /// <summary>
+    /// String identification of the event handler.
+    /// </summary>
+    public string GetName()
+    {
+        return GetType().Name;
+    }
 
-        /// <summary>
-        /// Create <see cref="Autodesk.Revit.UI.ExternalEvent"/> using the <see cref="AsyncExternalEventHandler{TResult}"/>
-        /// </summary>
-        public ExternalEvent Create()
-        {
-            return ExternalEvent.Create(this);
-        }
+    /// <summary>
+    /// Create <see cref="Autodesk.Revit.UI.ExternalEvent"/> using the <see cref="AsyncExternalEventHandler{TResult}"/>
+    /// </summary>
+    public ExternalEvent Create()
+    {
+        return ExternalEvent.Create(this);
+    }
 
-        /// <summary>
-        /// Dispose the registration cancelation token.
-        /// </summary>
-        public void Dispose()
-        {
-            tcs.Dispose();
-        }
+    /// <summary>
+    /// Dispose the registration cancelation token.
+    /// </summary>
+    public void Dispose()
+    {
+        _tcs.Dispose();
     }
 }

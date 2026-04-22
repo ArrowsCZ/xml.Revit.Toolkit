@@ -1,4 +1,4 @@
-﻿/* 作    者: xml
+/* 作    者: xml
 ** 创建时间: 2024/2/16 20:26:06
 **
 ** Copyright 2024 by zedmoster
@@ -10,41 +10,40 @@
 ** documentation.
 */
 
-namespace xml.Revit.Toolkit.RevitTask.ExternalEventHandlers
+namespace xml.Revit.Toolkit.RevitTask.ExternalEventHandlers;
+
+/// <summary>
+/// <see cref="TaskCompletionSource{TResult}"/> with cancellation token.
+/// </summary>
+/// <typeparam name="TResult"></typeparam>
+internal class TaskCompletionSourceCancellation<TResult>
+    : TaskCompletionSource<TResult>,
+        IDisposable
 {
+    private readonly IDisposable _registration;
+
     /// <summary>
-    /// <see cref="TaskCompletionSource{TResult}"/> with cancellation token.
+    /// Creates a <see cref="TaskCompletionSource{TResult}"/> with cancellation token.
     /// </summary>
-    /// <typeparam name="TResult"></typeparam>
-    internal class TaskCompletionSourceCancellation<TResult>
-        : TaskCompletionSource<TResult>,
-            IDisposable
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public TaskCompletionSourceCancellation(CancellationToken cancellationToken = default)
     {
-        private readonly IDisposable registration;
+        if (cancellationToken == CancellationToken.None)
+            cancellationToken = CancellationToken.None;
 
-        /// <summary>
-        /// Creates a <see cref="TaskCompletionSource{TResult}"/> with cancellation token.
-        /// </summary>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        public TaskCompletionSourceCancellation(CancellationToken cancellationToken = default)
+        if (cancellationToken.IsCancellationRequested)
         {
-            if (cancellationToken == default)
-                cancellationToken = CancellationToken.None;
-
-            if (cancellationToken.IsCancellationRequested)
-            {
-                TrySetCanceled(cancellationToken);
-                return;
-            }
-            registration = cancellationToken.Register(() => TrySetCanceled(cancellationToken));
+            TrySetCanceled(cancellationToken);
+            return;
         }
+        _registration = cancellationToken.Register(() => TrySetCanceled(cancellationToken));
+    }
 
-        /// <summary>
-        /// Dispose the registration cancelation token.
-        /// </summary>
-        public void Dispose()
-        {
-            registration?.Dispose();
-        }
+    /// <summary>
+    /// Dispose the registration cancelAction token.
+    /// </summary>
+    public void Dispose()
+    {
+        _registration?.Dispose();
     }
 }

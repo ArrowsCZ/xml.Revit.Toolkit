@@ -1,194 +1,172 @@
-﻿/* 作    者: xml
-** 创建时间: 2024/2/16 20:26:06
-**
-** Copyright 2024 by zedmoster
-** Permission to use, copy, modify, and distribute this software in
-** object code form for any purpose and without fee is hereby granted,
-** provided that the above copyright notice appears in all copies and
-** that both that copyright notice and the limited warranty and
-** restricted rights notice below appear in all supporting
-** documentation.
-*/
+/* 作    者: xml
+ ** 创建时间: 2024/2/16 20:26:06
+ **
+ ** Copyright 2024 by zedmoster
+ ** Permission to use, copy, modify, and distribute this software in
+ ** object code form for any purpose and without fee is hereby granted,
+ ** provided that the above copyright notice appears in all copies and
+ ** that both that copyright notice and the limited warranty and
+ ** restricted rights notice below appear in all supporting
+ ** documentation.
+ */
 
 using System.Diagnostics;
 
-namespace xml.Revit.Toolkit.Extensions
+namespace xml.Revit.Toolkit.Extensions;
+
+/// <summary>
+/// Transaction Extensions
+/// </summary>
+public static class TransactionExtensions
 {
     /// <summary>
-    /// Transaction Extensions
+    /// 内置名称
     /// </summary>
-    public static class TransactionExtensions
-    {
-        /// <summary>
-        /// 内置名称
-        /// </summary>
-        private const string TransactionName = "zedmoster";
+    private const string TransactionName = "zedmoster";
 
+    /// <param name="doc">文档</param>
+    extension(Document doc)
+    {
         /// <summary>
         /// 封装事务组方法
         /// </summary>
-        /// <param name="doc">文档</param>
         /// <param name="action">要执行的操作</param>
         /// <param name="name">事务组名称</param>
-        public static void TransactionGroup(
-            this Document doc,
-            Action<TransactionGroup> action,
-            string name = null
-        )
+        public void TransactionGroup(Action<TransactionGroup> action, string name = null)
         {
             name = string.IsNullOrWhiteSpace(name) ? TransactionName : name;
-            using (TransactionGroup tg = new(doc, name))
-            {
-                tg.Start();
-                action(tg);
-                if (tg.HasStarted() && tg.GetStatus() == TransactionStatus.Started)
-                    tg.Assimilate();
-                else
-                    tg.RollBack();
-            }
+            using TransactionGroup tg = new(doc, name);
+            tg.Start();
+            action(tg);
+            if (tg.HasStarted() && tg.GetStatus() == TransactionStatus.Started)
+                tg.Assimilate();
+            else
+                tg.RollBack();
         }
 
         /// <summary>
         /// 封装事务方法
         /// </summary>
-        /// <param name="doc">文档</param>
         /// <param name="action">要执行的操作</param>
         /// <param name="name">事务名称</param>
         /// <param name="ignoreFailure">是否忽略失败</param>
-        public static void Transaction(
-            this Document doc,
-            Action<Transaction> action,
-            string name = null,
-            bool ignoreFailure = true
-        )
+        public void Transaction(Action<Transaction> action, string name = null, bool ignoreFailure = true)
         {
             name = string.IsNullOrWhiteSpace(name) ? TransactionName : name;
 
-            using (Transaction t = new(doc, name))
+            using Transaction t = new(doc, name);
+            try
             {
-                try
+                t.Start();
+                if (ignoreFailure)
+                    IgnoreFailure(t);
+                action(t);
+                if (t.HasStarted() && t.GetStatus() == TransactionStatus.Started)
                 {
-                    t.Start();
-                    if (ignoreFailure)
-                        IgnoreFailure(t);
-                    action(t);
-                    if (t.HasStarted() && t.GetStatus() == TransactionStatus.Started)
-                    {
-                        t.Commit();
-                    }
+                    t.Commit();
                 }
-                catch (OperationCanceledException)
-                {
-                    Debug.WriteLine("Canceled");
-                    t.RollBack();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                    t.RollBack();
-                    throw;
-                }
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.WriteLine("Canceled");
+                t.RollBack();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                t.RollBack();
+                throw;
             }
         }
 
         /// <summary>
         /// 子事务
         /// </summary>
-        /// <param name="doc"></param>
         /// <param name="action"></param>
-        public static void SubTransaction(this Document doc, Action<SubTransaction> action)
+        public void SubTransaction(Action<SubTransaction> action)
         {
-            using (SubTransaction t = new(doc))
+            using SubTransaction t = new(doc);
+            try
             {
-                try
+                t.Start();
+                action(t);
+                if (t.HasStarted() && t.GetStatus() == TransactionStatus.Started)
                 {
-                    t.Start();
-                    action(t);
-                    if (t.HasStarted() && t.GetStatus() == TransactionStatus.Started)
-                    {
-                        t.Commit();
-                    }
-                }
-                catch (OperationCanceledException)
-                {
-                    Debug.WriteLine("Canceled");
-                    t.RollBack();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                    t.RollBack();
-                    throw;
+                    t.Commit();
                 }
             }
-        }
-
-        /// <summary>
-        /// 忽略警告弹窗提示
-        /// </summary>
-        /// <param name="t"> 事务</param>
-        private static void IgnoreFailure(Transaction t)
-        {
-            var fho = t.GetFailureHandlingOptions();
-            fho.SetFailuresPreprocessor(new FailuresPreprocessorBase());
-            t.SetFailureHandlingOptions(fho);
+            catch (OperationCanceledException)
+            {
+                Debug.WriteLine("Canceled");
+                t.RollBack();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                t.RollBack();
+                throw;
+            }
         }
     }
 
     /// <summary>
-    /// IFailuresPreprocessor
+    /// 忽略警告弹窗提示
     /// </summary>
-    public class FailuresPreprocessorBase : IFailuresPreprocessor
+    /// <param name="t"> 事务</param>
+    private static void IgnoreFailure(Transaction t)
     {
-        /// <summary>
-        /// 忽略弹窗错误警告
-        /// </summary>
-        public static bool IsIgnoreError { get; set; } = false;
+        var fho = t.GetFailureHandlingOptions();
+        fho.SetFailuresPreprocessor(new FailuresPreprocessorBase());
+        t.SetFailureHandlingOptions(fho);
+    }
+}
 
-        /// <summary>
-        /// IFailuresPreprocessor.PreprocessFailures
-        /// </summary>
-        /// <param name="failuresAccessor"></param>
-        /// <returns></returns>
-        public virtual FailureProcessingResult PreprocessFailures(FailuresAccessor failuresAccessor)
+/// <summary>
+/// IFailuresPreprocessor
+/// </summary>
+public class FailuresPreprocessorBase : IFailuresPreprocessor
+{
+    /// <summary>
+    /// 忽略弹窗错误警告
+    /// </summary>
+    public static bool IsIgnoreError { get; set; } = false;
+
+    /// <summary>
+    /// IFailuresPreprocessor.PreprocessFailures
+    /// </summary>
+    /// <param name="failuresAccessor"></param>
+    /// <returns></returns>
+    public virtual FailureProcessingResult PreprocessFailures(FailuresAccessor failuresAccessor)
+    {
+        var failures = failuresAccessor.GetFailureMessages();
+        if (failures.Count > 0)
         {
-            var failures = failuresAccessor.GetFailureMessages();
-            if (failures.Count > 0)
+            foreach (FailureMessageAccessor f in failures)
             {
-                foreach (FailureMessageAccessor f in failures)
+                switch (f.GetSeverity())
                 {
-                    switch (f.GetSeverity())
-                    {
-                        case FailureSeverity.None:
-                            break;
-                        case FailureSeverity.Warning:
-                            if (f.HasResolutions())
-                            {
-                                failuresAccessor.ResolveFailure(f);
-                            }
-                            else
-                            {
-                                failuresAccessor.DeleteWarning(f);
-                            }
+                    case FailureSeverity.None:
+                        break;
+                    case FailureSeverity.Warning:
+                        if (f.HasResolutions())
+                            failuresAccessor.ResolveFailure(f);
+                        else
+                            failuresAccessor.DeleteWarning(f);
+
+                        return FailureProcessingResult.ProceedWithCommit;
+                    case FailureSeverity.Error:
+                        if (IsIgnoreError)
+                        {
+                            failuresAccessor.DeleteAllWarnings();
                             return FailureProcessingResult.ProceedWithCommit;
-                        case FailureSeverity.Error:
-                            if (IsIgnoreError)
-                            {
-                                failuresAccessor.DeleteAllWarnings();
-                                return FailureProcessingResult.ProceedWithCommit;
-                            }
-                            else
-                            {
-                                return FailureProcessingResult.WaitForUserInput;
-                            }
-                        case FailureSeverity.DocumentCorruption:
-                            return FailureProcessingResult.ProceedWithRollBack;
-                        default:
-                            break;
-                    }
+                        }
+
+                        return FailureProcessingResult.WaitForUserInput;
+                    case FailureSeverity.DocumentCorruption:
+                        return FailureProcessingResult.ProceedWithRollBack;
                 }
             }
-            return FailureProcessingResult.Continue;
         }
+        return FailureProcessingResult.Continue;
     }
 }
