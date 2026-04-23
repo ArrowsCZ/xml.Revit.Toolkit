@@ -42,8 +42,7 @@ public static class WindowCollector
     public static void Show(Window window)
     {
         Attach(window);
-        new WindowInteropHelper(window).Owner = ComponentManager
-            .ApplicationWindow;
+        new WindowInteropHelper(window).Owner = ComponentManager.ApplicationWindow;
         window.Show();
     }
 
@@ -85,16 +84,15 @@ public static class WindowCollector
         where T : Window
     {
         var type = typeof(T);
-        foreach (var window in Windows)
-            if (window.GetType() == type)
-            {
-                if (window.WindowState == WindowState.Minimized)
-                    window.WindowState = WindowState.Normal;
-                if (window.Visibility != Visibility.Visible)
-                    window.Show();
-                window.Focus();
-                return false;
-            }
+        foreach (var window in Windows.Where(window => window.GetType() == type))
+        {
+            if (window.WindowState == WindowState.Minimized)
+                window.WindowState = WindowState.Normal;
+            if (window.Visibility != Visibility.Visible)
+                window.Show();
+            window.Focus();
+            return false;
+        }
 
         return true;
     }

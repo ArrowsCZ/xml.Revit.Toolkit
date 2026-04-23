@@ -23,9 +23,8 @@ namespace xml.Revit.Toolkit.RevitTask;
 /// <param name="application"></param>
 public class RevitTaskService(UIApplication application) : IDisposable, IRevitTask
 {
-    private readonly UIApplication uiapp = application;
-    private readonly List<ExternalEvent> ExternalEvents = [];
-    private readonly List<IExternalEventHandler> ExternalEventHandlers = [];
+    private readonly List<ExternalEvent> _externalEvents = [];
+    private readonly List<IExternalEventHandler> _externalEventHandlers = [];
 
     /// <summary>
     /// 是否已初始化
@@ -40,7 +39,7 @@ public class RevitTaskService(UIApplication application) : IDisposable, IRevitTa
     {
         if (HasInitialized)
             return;
-        uiapp.Idling += Application_Idling;
+        application.Idling += Application_Idling;
         HasInitialized = true;
     }
 
@@ -68,7 +67,7 @@ public class RevitTaskService(UIApplication application) : IDisposable, IRevitTa
         {
             try
             {
-                var result = function.Invoke(uiapp);
+                var result = function.Invoke(application);
                 return Task.FromResult(result);
             }
             catch (Exception ex)
@@ -82,32 +81,32 @@ public class RevitTaskService(UIApplication application) : IDisposable, IRevitTa
                 function,
                 cancellationToken
             );
-        ExternalEventHandlers.Add(asyncExternalEventHandler);
+        _externalEventHandlers.Add(asyncExternalEventHandler);
         return asyncExternalEventHandler.AsyncResult();
     }
 
     private void Application_Idling(object sender, IdlingEventArgs e)
     {
-        foreach (var asyncExternalEventHandler in ExternalEventHandlers)
+        foreach (var asyncExternalEventHandler in _externalEventHandlers)
         {
-            if (ExternalEventHandlers.Remove(asyncExternalEventHandler))
+            if (_externalEventHandlers.Remove(asyncExternalEventHandler))
             {
                 if (asyncExternalEventHandler is IDisposable disposable)
                     disposable.Dispose();
 
                 var externalEvent = ExternalEvent.Create(asyncExternalEventHandler);
                 externalEvent.Raise();
-                ExternalEvents.Add(externalEvent);
+                _externalEvents.Add(externalEvent);
                 break;
             }
         }
 
-        foreach (var externalEvent in ExternalEvents)
+        foreach (var externalEvent in _externalEvents)
         {
             if (externalEvent.IsPending)
                 continue;
 
-            if (ExternalEvents.Remove(externalEvent))
+            if (_externalEvents.Remove(externalEvent))
             {
                 externalEvent.Dispose();
                 break;
@@ -123,10 +122,10 @@ public class RevitTaskService(UIApplication application) : IDisposable, IRevitTa
     {
         if (!HasInitialized)
             return;
-        uiapp.Idling -= Application_Idling;
+        application.Idling -= Application_Idling;
 
-        ExternalEvents.Clear();
-        ExternalEventHandlers.Clear();
+        _externalEvents.Clear();
+        _externalEventHandlers.Clear();
         HasInitialized = false;
     }
 }

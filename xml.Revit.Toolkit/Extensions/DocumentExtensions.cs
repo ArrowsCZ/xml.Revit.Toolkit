@@ -280,10 +280,7 @@ public static class DocumentExtensions
         public DetailCurve CreateDetailCurve(Curve curve, GraphicsStyle graphicsStyle, View view = null)
         {
             var detailCurve = doc.CreateDetailCurve(curve, view);
-            if (detailCurve != null)
-            {
-                detailCurve.LineStyle = graphicsStyle;
-            }
+            detailCurve?.LineStyle = graphicsStyle;
             return detailCurve;
         }
 
@@ -465,9 +462,9 @@ public static class DocumentExtensions
         /// 获取当前标高所有的房间
         /// </summary>
         /// <param name="level"></param>
-        /// <param name="hasLinkdoc">链接房间所在标高名称等于参数<paramref name="level"/>名称</param>
+        /// <param name="hasLinkDoc">链接房间所在标高名称等于参数<paramref name="level"/>名称</param>
         /// <returns></returns>
-        public List<Room> GetLevelRooms(Level level, bool hasLinkdoc)
+        public List<Room> GetLevelRooms(Level level, bool hasLinkDoc)
         {
             List<Room> rooms = [];
             var docRooms = doc.OfClass<SpatialElement>(BuiltInCategory.OST_Rooms)
@@ -475,18 +472,18 @@ public static class DocumentExtensions
                     o.Area != 0
                     && (o.Level.Name.Equals(level.Name) || o.Level.ProjectElevation.Equals(level.ProjectElevation))
                 )
-                .Cast<Room>();
+                .Cast<Room>()
+                .ToList();
             if (docRooms.Any())
-            {
                 rooms.AddRange(docRooms);
-            }
-            if (hasLinkdoc)
+
+            if (hasLinkDoc)
             {
                 var linkInstances = doc.OfClass<RevitLinkInstance>().Where(o => o.HasLinked());
                 foreach (var item in linkInstances)
                 {
-                    var linkdoc = item.GetLinkDocument();
-                    var linkRooms = linkdoc
+                    var linkDocument = item.GetLinkDocument();
+                    var linkRooms = linkDocument
                         .OfClass<SpatialElement>(BuiltInCategory.OST_Rooms)
                         .Where(o =>
                             o.Area != 0
@@ -495,11 +492,10 @@ public static class DocumentExtensions
                                 || o.Level.ProjectElevation.Equals(level.ProjectElevation)
                             )
                         )
-                        .Cast<Room>();
+                        .Cast<Room>()
+                        .ToList();
                     if (linkRooms.Any())
-                    {
                         rooms.AddRange(linkRooms);
-                    }
                 }
             }
 
@@ -509,29 +505,25 @@ public static class DocumentExtensions
         /// <summary>
         /// 获取或创建工作集
         /// </summary>
-        /// <param name="worksetName"></param>
-        /// <param name="worksetKind"></param>
+        /// <param name="workSetName"></param>
+        /// <param name="workSetKind"></param>
         /// <returns></returns>
-        public Workset NewWorkSet(string worksetName, WorksetKind worksetKind = WorksetKind.UserWorkset)
+        public Workset NewWorkSet(string workSetName, WorksetKind workSetKind = WorksetKind.UserWorkset)
         {
             using FilteredWorksetCollector elementCollector = new(doc);
-            var workSets = elementCollector.OfKind(worksetKind).ToWorksets();
-            var workset = workSets.FirstOrDefault(o => o.Name == worksetName);
-            if (workset == null)
+            var workSets = elementCollector.OfKind(workSetKind).ToWorksets();
+            var workSet = workSets.FirstOrDefault(o => o.Name == workSetName);
+            if (workSet == null)
             {
                 if (doc.IsWorkshared)
                 {
-                    if (WorksetTable.IsWorksetNameUnique(doc, worksetName))
-                    {
-                        workset = Workset.Create(doc, worksetName);
-                    }
+                    if (WorksetTable.IsWorksetNameUnique(doc, workSetName))
+                        workSet = Workset.Create(doc, workSetName);
                     else
-                    {
-                        throw new Exception("工作集名称无法创建:" + worksetName);
-                    }
+                        throw new Exception("工作集名称无法创建:" + workSetName);
                 }
             }
-            return workset;
+            return workSet;
         }
 
         /// <summary>
@@ -551,13 +543,9 @@ public static class DocumentExtensions
             {
                 var d = size.NominalDiameter.FeetToMm().RoundToDouble();
                 if (size.UsedInSizeLists)
-                {
                     widths.Add(d);
-                }
                 if (size.UsedInSizing)
-                {
                     heights.Add(d);
-                }
             }
         }
 

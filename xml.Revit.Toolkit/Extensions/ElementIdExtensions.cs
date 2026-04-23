@@ -26,10 +26,8 @@ public static class ElementIdExtensions
         /// <param name="doc">文档对象。</param>
         /// <returns>Element 对象列表。</returns>
         [Pure]
-        public List<Element> ToElements(Document doc)
-        {
-            return elementIds.Select(id => id.ToElement(doc)).Where(el => el != null).ToList();
-        }
+        public List<Element> ToElements(Document doc) =>
+            elementIds.Select(id => id.ToElement(doc)).Where(el => el != null).ToList();
 
         /// <summary>
         /// 将 ElementIds 集合转换为元素列表。
@@ -39,10 +37,7 @@ public static class ElementIdExtensions
         /// <returns>元素列表。</returns>
         [Pure]
         public List<T> ToElements<T>(Document doc)
-            where T : Element
-        {
-            return elementIds.Select(id => id.ToElement(doc)).OfType<T>().ToList();
-        }
+            where T : Element => elementIds.Select(id => id.ToElement(doc)).OfType<T>().ToList();
     }
 
     /// <summary>
@@ -51,10 +46,8 @@ public static class ElementIdExtensions
     /// <param name="elements">元素列表。</param>
     /// <returns>ElementId 列表。</returns>
     [Pure]
-    public static List<ElementId> ToElementIds(this IEnumerable<Element> elements)
-    {
-        return elements.Select(element => element.Id).ToList();
-    }
+    public static List<ElementId> ToElementIds(this IEnumerable<Element> elements) =>
+        elements.Select(element => element.Id).ToList();
 
     /// <param name="id"></param>
     extension(ElementId id)
@@ -67,10 +60,7 @@ public static class ElementIdExtensions
         /// <returns></returns>
         [Pure]
         public T ToElement<T>(Document document)
-            where T : Element
-        {
-            return (T)document.GetElement(id);
-        }
+            where T : Element => (T)document.GetElement(id);
 
         /// <summary>
         /// 将 ElementId 转换为 Element。
@@ -88,15 +78,9 @@ public static class ElementIdExtensions
     /// <returns></returns>
 #if REVIT2024_OR_GREATER
     [Pure]
-    public static long GetValue(this ElementId id)
-    {
-        return id.Value;
-    }
+    public static long GetValue(this ElementId id) => id.Value;
 #else
     [Pure]
-    public static int GetValue(this ElementId id)
-    {
-        return id.IntegerValue;
-    }
+    public static int GetValue(this ElementId id) => id.IntegerValue;
 #endif
 }

@@ -29,9 +29,7 @@ public static class ElementExtensions
         where T : Element
     {
         var doc = el.Document;
-        var id = ElementTransformUtils
-            .CopyElement(el.Document, el.Id, XYZ.Zero)
-            .FirstOrDefault();
+        var id = ElementTransformUtils.CopyElement(el.Document, el.Id, XYZ.Zero).FirstOrDefault();
         return id.ToElement(doc) as T;
     }
 
@@ -50,11 +48,7 @@ public static class ElementExtensions
             {
                 return solids;
             }
-            var opt = new Options
-            {
-                ComputeReferences = true,
-                IncludeNonVisibleObjects = true,
-            };
+            var opt = new Options { ComputeReferences = true, IncludeNonVisibleObjects = true };
             foreach (var g in el.get_Geometry(opt))
             {
                 if (g is GeometryInstance geometryInstance)
@@ -86,24 +80,20 @@ public static class ElementExtensions
         {
             if (el.IsEqualCategory(BuiltInCategory.OST_Walls))
             {
-                return el.get_Parameter(BuiltInParameter.WALL_STRUCTURAL_SIGNIFICANT).AsInteger()
-                       == 1;
+                return el.get_Parameter(BuiltInParameter.WALL_STRUCTURAL_SIGNIFICANT).AsInteger() == 1;
             }
 
             if (el.IsEqualCategory(BuiltInCategory.OST_Floors))
             {
-                return el.get_Parameter(BuiltInParameter.FLOOR_PARAM_IS_STRUCTURAL).AsInteger()
-                       == 1;
+                return el.get_Parameter(BuiltInParameter.FLOOR_PARAM_IS_STRUCTURAL).AsInteger() == 1;
             }
 
             bool framing = el.IsEqualCategory(BuiltInCategory.OST_StructuralFraming);
             bool column = el.IsEqualCategory(BuiltInCategory.OST_StructuralColumns);
             bool level = el.IsEqualCategory(BuiltInCategory.OST_Levels);
             return framing
-                   || column
-                   || (
-                       level && el.get_Parameter(BuiltInParameter.LEVEL_IS_STRUCTURAL).AsInteger() == 1
-                   );
+                || column
+                || (level && el.get_Parameter(BuiltInParameter.LEVEL_IS_STRUCTURAL).AsInteger() == 1);
         }
     }
 
@@ -140,9 +130,7 @@ public static class ElementExtensions
         /// <returns></returns>
         public ElementId Copy(XYZ vector)
         {
-            return ElementTransformUtils
-                .CopyElement(element.Document, element.Id, vector)
-                .FirstOrDefault();
+            return ElementTransformUtils.CopyElement(element.Document, element.Id, vector).FirstOrDefault();
         }
 
         /// <summary>
@@ -165,9 +153,7 @@ public static class ElementExtensions
         public ElementId Mirror(Plane plane, bool mirrorCopies)
         {
             var ids = new List<ElementId> { element.Id };
-            return ElementTransformUtils
-                .MirrorElements(element.Document, ids, plane, mirrorCopies)
-                .FirstOrDefault();
+            return ElementTransformUtils.MirrorElements(element.Document, ids, plane, mirrorCopies).FirstOrDefault();
         }
 
         /// <summary>
@@ -254,15 +240,13 @@ public static class ElementExtensions
                 return null;
             }
 
-            var parameter =
-                element.LookupParameter(name) ?? GetParameterByNameIgnoreCase(name, element.Parameters);
+            var parameter = element.LookupParameter(name) ?? GetParameterByNameIgnoreCase(name, element.Parameters);
             if (parameter == null)
             {
-                if (element.Document.GetElement(element.GetTypeId()) is ElementType elementtype)
+                if (element.Document.GetElement(element.GetTypeId()) is ElementType elementType)
                 {
                     parameter =
-                        elementtype.LookupParameter(name)
-                        ?? GetParameterByNameIgnoreCase(name, elementtype.Parameters);
+                        elementType.LookupParameter(name) ?? GetParameterByNameIgnoreCase(name, elementType.Parameters);
                 }
             }
             return parameter;
@@ -278,11 +262,7 @@ public static class ElementExtensions
     /// <param name="snoopType"></param>
     /// <returns></returns>
     [Pure]
-    public static Parameter GetParameter(
-        this Element element,
-        ForgeTypeId parameter,
-        bool snoopType
-    )
+    public static Parameter GetParameter(this Element element, ForgeTypeId parameter, bool snoopType)
     {
         var instanceParameter = element.GetParameter(parameter);
         if (instanceParameter is { HasValue: true } || snoopType == false)
@@ -303,22 +283,10 @@ public static class ElementExtensions
     /// <param name="parameterSet"></param>
     /// <returns></returns>
     [Pure]
-    private static Parameter GetParameterByNameIgnoreCase(
-        string name,
-        ParameterSet parameterSet
-    )
-    {
-        var _name = name.ToLower();
-        foreach (Parameter item in parameterSet)
-        {
-            if (item.Definition.Name.Equals(_name, StringComparison.OrdinalIgnoreCase))
-            {
-                return item;
-            }
-        }
-
-        return null;
-    }
+    private static Parameter GetParameterByNameIgnoreCase(string name, ParameterSet parameterSet) =>
+        parameterSet
+            .Cast<Parameter>()
+            .FirstOrDefault(item => item.Definition.Name.Equals(name.ToLower(), StringComparison.OrdinalIgnoreCase));
 
     /// <param name="el"> Element</param>
     extension(Element el)
@@ -382,9 +350,7 @@ public static class ElementExtensions
         /// <param name="parameterValue"></param>
         /// <returns></returns>
         [Pure]
-        public bool IsEqualsParameterValue(string parameterName,
-            string parameterValue
-        )
+        public bool IsEqualsParameterValue(string parameterName, string parameterValue)
         {
             return parameterValue.Equals(el.GetParameterValueByName(parameterName));
         }
@@ -396,9 +362,7 @@ public static class ElementExtensions
         /// <param name="parameterValue"></param>
         /// <returns></returns>
         [Pure]
-        public bool IsEqualsParameterValue(BuiltInParameter builtInParameter,
-            string parameterValue
-        )
+        public bool IsEqualsParameterValue(BuiltInParameter builtInParameter, string parameterValue)
         {
             el.ThrowIfNullOrInvalid();
             var p = el.get_Parameter(builtInParameter);
@@ -469,7 +433,7 @@ public static class ElementExtensions
         {
             el.ThrowIfNullOrInvalid();
             return el?.Category?.Id != ElementId.InvalidElementId
-                   && (BuiltInCategory)el!.Category.Id.GetValue() == builtInCategory;
+                && (BuiltInCategory)el?.Category.Id.GetValue() == builtInCategory;
         }
 
         /// <summary>
@@ -478,10 +442,7 @@ public static class ElementExtensions
         /// <param name="id"> 类别ID</param>
         /// <returns> 是否相等</returns>
         [Pure]
-        public bool IsEqualCategory(int id)
-        {
-            return el?.Category?.Id?.GetValue() == id;
-        }
+        public bool IsEqualCategory(int id) => el?.Category?.Id?.GetValue() == id;
 
         /// <summary>
         /// 解析图形
@@ -546,7 +507,7 @@ public static class ElementExtensions
     {
         return elements
             .Where(o => o.IsValidObject)
-            .SelectMany(o => o.GetOrderedParameters().Select(o => o.Definition.Name))
+            .SelectMany(o => o.GetOrderedParameters().Select(parameter => parameter.Definition.Name))
             .Distinct()
             .OrderBy(o => o)
             .ToList();
@@ -557,15 +518,6 @@ public static class ElementExtensions
     /// </summary>
     /// <param name="element"></param>
     /// <returns></returns>
-    public static List<string> GetParameterNames(this Element element)
-    {
-        return
-        [
-            .. element
-                .GetOrderedParameters()
-                .Select(o => o.Definition.Name)
-                .Distinct()
-                .OrderBy(o => o),
-        ];
-    }
+    public static List<string> GetParameterNames(this Element element) =>
+        [.. element.GetOrderedParameters().Select(o => o.Definition.Name).Distinct().OrderBy(o => o)];
 }

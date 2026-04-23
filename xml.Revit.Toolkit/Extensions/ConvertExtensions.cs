@@ -105,7 +105,7 @@ public static class ConvertExtensions
         public double ToRadians()
         {
 #if REVIT2021_OR_GREATER
-            return UnitUtils.ConvertToInternalUnits(degrees, UnitTypeId.Degrees);
+            return UnitUtils.ConvertToInternalUnits(value, UnitTypeId.Degrees);
 #else
             return UnitUtils.ConvertToInternalUnits(value, DisplayUnitType.DUT_DECIMAL_DEGREES);
 #endif
@@ -118,7 +118,7 @@ public static class ConvertExtensions
         public double ToDegrees()
         {
 #if REVIT2021_OR_GREATER
-            return UnitUtils.ConvertFromInternalUnits(radians, UnitTypeId.Degrees);
+            return UnitUtils.ConvertFromInternalUnits(value, UnitTypeId.Degrees);
 #else
             return UnitUtils.ConvertFromInternalUnits(value, DisplayUnitType.DUT_DECIMAL_DEGREES);
 #endif

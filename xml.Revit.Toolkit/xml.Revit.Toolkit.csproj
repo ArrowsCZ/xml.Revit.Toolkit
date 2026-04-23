@@ -10,7 +10,7 @@
         <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*-*" />
         <PackageReference Include="Nice3point.Revit.Api.UIFramework" Version="$(RevitVersion).*-*" />
         <PackageReference Include="Nice3point.Revit.Api.UIFrameworkServices" Version="$(RevitVersion).*-*" />
-        <PackageReference Include="Nice3point.Revit.Sdk" Version="6.2.1" />
+        <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="2.0.2" />
         <PackageReference Include="System.Resources.Extensions" Version="9.0.1" />
     </ItemGroup>
 

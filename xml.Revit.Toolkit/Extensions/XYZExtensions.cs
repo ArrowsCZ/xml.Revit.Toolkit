@@ -25,6 +25,7 @@ public static class XyzExtensions
         /// </summary>
         /// <param name="z">新的 Z 坐标值</param>
         /// <returns>具有重置 Z 坐标的新点</returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public XYZ Flatten(double z = 0) =>
             point is null ? throw new ArgumentNullException(nameof(point)) : new XYZ(point.X, point.Y, z);
 
@@ -34,6 +35,7 @@ public static class XyzExtensions
         /// <param name="p1">点2</param>
         /// <param name="tolerance">误差</param>
         /// <returns>是否相等</returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public bool IsEquals(XYZ p1, double tolerance = 1e-5)
         {
             if (point is null)
@@ -48,6 +50,7 @@ public static class XyzExtensions
         /// <param name="dir2">向量2</param>
         /// <param name="tolerance">误差</param>
         /// <returns>是否垂直</returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public bool IsVertical(XYZ dir2, double tolerance = 1e-5)
         {
             if (point is null)
@@ -64,16 +67,13 @@ public static class XyzExtensions
         /// <param name="vector2">第二个向量</param>
         /// <param name="tolerance">误差范围</param>
         /// <returns>如果两个向量在指定误差范围内平行，返回 true；否则返回 false。</returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public bool IsParallel(XYZ vector2, double tolerance = 1e-5)
         {
             if (point is null)
-            {
                 throw new ArgumentNullException(nameof(point));
-            }
             if (vector2 is null)
-            {
                 throw new ArgumentNullException(nameof(vector2));
-            }
             var b1 = point.IsAlmostEqualTo(vector2, tolerance);
             var b2 = point.IsAlmostEqualTo(vector2.Negate(), tolerance);
             return b1 || b2;
@@ -209,10 +209,7 @@ public static class XyzExtensions
         /// </summary>
         /// <param name="direction"></param>
         /// <returns></returns>
-        public Line GetAxis(XYZ direction)
-        {
-            return Line.CreateUnbound(pnt, direction);
-        }
+        public Line GetAxis(XYZ direction) => Line.CreateUnbound(pnt, direction);
 
         /// <summary>
         /// 创建直线,如果线段太短返回null <see cref="Autodesk.Revit.ApplicationServices.Application.ShortCurveTolerance"/>
@@ -459,10 +456,8 @@ public static class XyzExtensions
         /// </summary>
         /// <param name="digits"></param>
         /// <returns></returns>
-        public XYZ Round(int digits = 5)
-        {
-            return new XYZ(point.X.RoundToDouble(digits), point.Y.RoundToDouble(digits), point.Z.RoundToDouble(digits));
-        }
+        public XYZ Round(int digits = 5) =>
+            new(point.X.RoundToDouble(digits), point.Y.RoundToDouble(digits), point.Z.RoundToDouble(digits));
 
         /// <summary>
         /// 点在多边形内部
