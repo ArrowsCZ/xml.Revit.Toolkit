@@ -102,27 +102,13 @@ public static class ConvertExtensions
         /// 角度 --> 弧度
         /// </summary>
         /// <returns> 弧度</returns>
-        public double ToRadians()
-        {
-#if REVIT2021_OR_GREATER
-            return UnitUtils.ConvertToInternalUnits(value, UnitTypeId.Degrees);
-#else
-            return UnitUtils.ConvertToInternalUnits(value, DisplayUnitType.DUT_DECIMAL_DEGREES);
-#endif
-        }
+        public double ToRadians() => UnitUtils.ConvertToInternalUnits(value, UnitTypeId.Degrees);
 
         /// <summary>
         /// 弧度 --> 角度
         /// </summary>
         /// <returns> 角度</returns>
-        public double ToDegrees()
-        {
-#if REVIT2021_OR_GREATER
-            return UnitUtils.ConvertFromInternalUnits(value, UnitTypeId.Degrees);
-#else
-            return UnitUtils.ConvertFromInternalUnits(value, DisplayUnitType.DUT_DECIMAL_DEGREES);
-#endif
-        }
+        public double ToDegrees() => UnitUtils.ConvertFromInternalUnits(value, UnitTypeId.Degrees);
 
         /// <summary>
         /// 将小数四舍五入到指定的小数位数。

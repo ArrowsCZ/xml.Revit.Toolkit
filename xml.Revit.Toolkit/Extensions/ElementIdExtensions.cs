@@ -69,18 +69,12 @@ public static class ElementIdExtensions
         /// <returns>Element 对象。</returns>
         [Pure]
         public Element ToElement(Document doc) => doc.GetElement(id);
-    }
 
-    /// <summary>
-    /// 获取ID值
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-#if REVIT2024_OR_GREATER
-    [Pure]
-    public static long GetValue(this ElementId id) => id.Value;
-#else
-    [Pure]
-    public static int GetValue(this ElementId id) => id.IntegerValue;
-#endif
+        /// <summary>
+        /// 获取ID值
+        /// </summary>
+        /// <returns></returns>
+        [Pure]
+        public long GetValue() => id.Value;
+    }
 }
