@@ -1,14 +1,14 @@
 /* 作    者: xml
-** 创建时间: 2024/2/16 20:26:06
-**
-** Copyright 2024 by zedmoster
-** Permission to use, copy, modify, and distribute this software in
-** object code form for any purpose and without fee is hereby granted,
-** provided that the above copyright notice appears in all copies and
-** that both that copyright notice and the limited warranty and
-** restricted rights notice below appear in all supporting
-** documentation.
-*/
+ ** 创建时间: 2024/2/16 20:26:06
+ **
+ ** Copyright 2024 by zedmoster
+ ** Permission to use, copy, modify, and distribute this software in
+ ** object code form for any purpose and without fee is hereby granted,
+ ** provided that the above copyright notice appears in all copies and
+ ** that both that copyright notice and the limited warranty and
+ ** restricted rights notice below appear in all supporting
+ ** documentation.
+ */
 
 namespace xml.Revit.Toolkit.Extensions;
 
@@ -102,13 +102,25 @@ public static class ConvertExtensions
         /// 角度 --> 弧度
         /// </summary>
         /// <returns> 弧度</returns>
-        public double ToRadians() => UnitUtils.ConvertToInternalUnits(value, UnitTypeId.Degrees);
+        public double ToRadians()
+#if REVIT2021_OR_GREATER
+            => UnitUtils.ConvertToInternalUnits(value, UnitTypeId.Degrees);
+#else
+            => UnitUtils.ConvertToInternalUnits(value, DisplayUnitType.DUT_DECIMAL_DEGREES);
+#endif
+
 
         /// <summary>
         /// 弧度 --> 角度
         /// </summary>
         /// <returns> 角度</returns>
-        public double ToDegrees() => UnitUtils.ConvertFromInternalUnits(value, UnitTypeId.Degrees);
+        public double ToDegrees()
+#if REVIT2021_OR_GREATER
+            => UnitUtils.ConvertFromInternalUnits(value, UnitTypeId.Degrees);
+#else
+            => UnitUtils.ConvertFromInternalUnits(value, DisplayUnitType.DUT_DECIMAL_DEGREES);
+#endif
+
 
         /// <summary>
         /// 将小数四舍五入到指定的小数位数。
@@ -135,6 +147,7 @@ public static class ConvertExtensions
             {
                 throw new ArgumentException("模数必须为正整数。", nameof(modulus));
             }
+
             var quotient = value / modulus;
             var divide = Math.Truncate(value / modulus);
             var increment = Math.Round(quotient - divide, 2) >= 0.5 ? 1 : 0;

@@ -1,14 +1,14 @@
 /* 作    者: xml
-** 创建时间: 2024/2/16 20:26:06
-**
-** Copyright 2024 by zedmoster
-** Permission to use, copy, modify, and distribute this software in
-** object code form for any purpose and without fee is hereby granted,
-** provided that the above copyright notice appears in all copies and
-** that both that copyright notice and the limited warranty and
-** restricted rights notice below appear in all supporting
-** documentation.
-*/
+ ** 创建时间: 2024/2/16 20:26:06
+ **
+ ** Copyright 2024 by zedmoster
+ ** Permission to use, copy, modify, and distribute this software in
+ ** object code form for any purpose and without fee is hereby granted,
+ ** provided that the above copyright notice appears in all copies and
+ ** that both that copyright notice and the limited warranty and
+ ** restricted rights notice below appear in all supporting
+ ** documentation.
+ */
 
 namespace xml.Revit.Toolkit.Extensions;
 
@@ -60,7 +60,8 @@ public static class ElementIdExtensions
         /// <returns></returns>
         [Pure]
         public T ToElement<T>(Document document)
-            where T : Element => (T)document.GetElement(id);
+            where T : Element =>
+            (T)document.GetElement(id);
 
         /// <summary>
         /// 将 ElementId 转换为 Element。
@@ -69,12 +70,20 @@ public static class ElementIdExtensions
         /// <returns>Element 对象。</returns>
         [Pure]
         public Element ToElement(Document doc) => doc.GetElement(id);
-
-        /// <summary>
-        /// 获取ID值
-        /// </summary>
-        /// <returns></returns>
-        [Pure]
-        public long GetValue() => id.Value;
     }
+
+    /// <summary>
+    /// 获取ID值
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+#if REVIT2024_OR_GREATER
+    [Pure]
+    public static long GetValue(this ElementId id)
+        => id.Value;
+#else
+    [Pure]
+    public static int GetValue(this ElementId id)
+        => id.IntegerValue;
+#endif
 }

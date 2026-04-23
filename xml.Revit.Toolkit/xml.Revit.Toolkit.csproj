@@ -68,12 +68,43 @@
         <RevitVersion>2027</RevitVersion>
         <TargetFramework>net10.0-windows</TargetFramework>
     </PropertyGroup>
+    
+    <PropertyGroup Condition="$(Configuration.Contains('R18'))">
+        <DefineConstants>$(DefineConstants);REVIT2018;REVIT2018_OR_GREATER</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R19'))">
+        <DefineConstants>$(DefineConstants);REVIT2019;REVIT2018_OR_GREATER;REVIT2019_OR_GREATER</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R20'))">
+        <DefineConstants>$(DefineConstants);REVIT2020;REVIT2018_OR_GREATER;REVIT2019_OR_GREATER;REVIT2020_OR_GREATER</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R21'))">
+        <DefineConstants>$(DefineConstants);REVIT2021;REVIT2018_OR_GREATER;REVIT2019_OR_GREATER;REVIT2020_OR_GREATER;REVIT2021_OR_GREATER</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R22'))">
+        <DefineConstants>$(DefineConstants);REVIT2022;REVIT2018_OR_GREATER;REVIT2019_OR_GREATER;REVIT2020_OR_GREATER;REVIT2021_OR_GREATER;REVIT2022_OR_GREATER</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R23'))">
+        <DefineConstants>$(DefineConstants);REVIT2023;REVIT2018_OR_GREATER;REVIT2019_OR_GREATER;REVIT2020_OR_GREATER;REVIT2021_OR_GREATER;REVIT2022_OR_GREATER;REVIT2023_OR_GREATER</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R24'))">
+        <DefineConstants>$(DefineConstants);REVIT2024;REVIT2018_OR_GREATER;REVIT2019_OR_GREATER;REVIT2020_OR_GREATER;REVIT2021_OR_GREATER;REVIT2022_OR_GREATER;REVIT2023_OR_GREATER;REVIT2024_OR_GREATER</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R25'))">
+        <DefineConstants>$(DefineConstants);REVIT2025;REVIT2018_OR_GREATER;REVIT2019_OR_GREATER;REVIT2020_OR_GREATER;REVIT2021_OR_GREATER;REVIT2022_OR_GREATER;REVIT2023_OR_GREATER;REVIT2024_OR_GREATER;REVIT2025_OR_GREATER</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R26'))">
+        <DefineConstants>$(DefineConstants);REVIT2026;REVIT2018_OR_GREATER;REVIT2019_OR_GREATER;REVIT2020_OR_GREATER;REVIT2021_OR_GREATER;REVIT2022_OR_GREATER;REVIT2023_OR_GREATER;REVIT2024_OR_GREATER;REVIT2025_OR_GREATER;REVIT2026_OR_GREATER</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(Configuration.Contains('R27'))">
+        <DefineConstants>$(DefineConstants);REVIT2027;REVIT2018_OR_GREATER;REVIT2019_OR_GREATER;REVIT2020_OR_GREATER;REVIT2021_OR_GREATER;REVIT2022_OR_GREATER;REVIT2023_OR_GREATER;REVIT2024_OR_GREATER;REVIT2025_OR_GREATER;REVIT2026_OR_GREATER;REVIT2027_OR_GREATER</DefineConstants>
+    </PropertyGroup>
 
     <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
-        <DefineConstants>DEBUG;Debug</DefineConstants>
+        <DefineConstants>DEBUG;Debug;$(DefineConstants)</DefineConstants>
     </PropertyGroup>
     <PropertyGroup Condition="$(Configuration.Contains('Release'))">
-        <DefineConstants>RELEASE;Release</DefineConstants>
+        <DefineConstants>RELEASE;Release;$(DefineConstants)</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup>
