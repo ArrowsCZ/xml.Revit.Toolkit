@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <NugetVersion>10.8.0</NugetVersion>
+        <NugetVersion>11.2</NugetVersion>
         <PackageId>xml.Revit.Toolkit</PackageId>
     </PropertyGroup>
 
@@ -11,9 +11,15 @@
         <PackageReference Include="Nice3point.Revit.Api.UIFramework" Version="$(RevitVersion).*-*" />
         <PackageReference Include="Nice3point.Revit.Api.UIFrameworkServices" Version="$(RevitVersion).*-*" />
         <PackageReference Include="Nice3point.Revit.Sdk" Version="6.2.1" />
-        <PackageReference Include="System.Resources.Extensions" Version="9.0.1" />
     </ItemGroup>
 
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+		<PackageReference Include="System.Resources.Extensions" Version="10.0.7" />
+	</ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">
+		<PackageReference Include="System.Resources.Extensions" Version="10.0.7" />
+	</ItemGroup>
+	
     <PropertyGroup>
         <UseWPF>true</UseWPF>
         <LangVersion>latest</LangVersion>
@@ -181,9 +187,9 @@
 
     <PropertyGroup>
         <AssemblyTitle>Revit二次开发教程</AssemblyTitle>
-        <AssemblyDescription>https://www.zedmoster.cn</AssemblyDescription>
+        <AssemblyDescription>https://www.mzbim.cn</AssemblyDescription>
         <AssemblyCompany>广州明周科技有限公司</AssemblyCompany>
-        <AssemblyProduct>Revit插件</AssemblyProduct>
-        <Copyright>Copyright © 广州明周科技有限公司 2024-2025</Copyright>
+        <AssemblyProduct>Revit插件拓展包</AssemblyProduct>
+        <Copyright>Copyright © 广州明周科技有限公司 2026</Copyright>
     </PropertyGroup>
 </Project>
