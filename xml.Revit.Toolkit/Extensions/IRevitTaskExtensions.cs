@@ -1,4 +1,4 @@
-﻿/* 作    者: xml
+/* 作    者: xml
 ** 创建时间: 2024/2/16 20:26:06
 **
 ** Copyright 2024 by zedmoster
@@ -10,87 +10,56 @@
 ** documentation.
 */
 
-using xml.Revit.Toolkit.RevitTask;
+namespace xml.Revit.Toolkit.Extensions;
 
-namespace xml.Revit.Toolkit.Extensions
+/// <summary>
+/// Extension for <see cref="IRevitTask"/>
+/// </summary>
+public static class IRevitTaskExtensions
 {
-    /// <summary>
-    /// Extension for <see cref="IRevitTask"/>
-    /// </summary>
-    public static class IRevitTaskExtensions
+    extension(IRevitTask revitTask)
     {
         /// <summary>
         /// Run code in Revit context.
         /// </summary>
-        public static Task<TResult> RunAsync<TResult>(
-            this IRevitTask revitTask,
-            Func<UIApplication, TResult> function
-        )
-        {
-            return RunAsync(revitTask, function, CancellationToken.None);
-        }
+        public Task<TResult> RunAsync<TResult>(Func<UIApplication, TResult> function) =>
+            RunAsync(revitTask, function, CancellationToken.None);
 
         /// <summary>
         /// Run code in Revit context.
         /// </summary>
-        public static Task<TResult> RunAsync<TResult>(
-            this IRevitTask revitTask,
-            Func<TResult> function
-        )
-        {
-            return revitTask.RunAsync(function, CancellationToken.None);
-        }
+        public Task<TResult> RunAsync<TResult>(Func<TResult> function) =>
+            revitTask.RunAsync(function, CancellationToken.None);
 
         /// <summary>
         /// Run code in Revit context.
         /// </summary>
-        public static Task RunAsync(this IRevitTask revitTask, Action<UIApplication> action)
-        {
-            return revitTask.RunAsync(action, CancellationToken.None);
-        }
+        public Task RunAsync(Action<UIApplication> action) => revitTask.RunAsync(action, CancellationToken.None);
 
         /// <summary>
         /// Run code in Revit context.
         /// </summary>
-        public static Task RunAsync(this IRevitTask revitTask, Action action)
-        {
-            return revitTask.RunAsync(action, CancellationToken.None);
-        }
+        public Task RunAsync(Action action) => revitTask.RunAsync(action, CancellationToken.None);
 
         /// <summary>
         /// Run code in Revit context.
         /// </summary>
-        public static Task<TResult> RunAsync<TResult>(
-            this IRevitTask revitTask,
+        public Task<TResult> RunAsync<TResult>(
             Func<UIApplication, TResult> function,
             CancellationToken cancellationToken
-        )
-        {
-            return revitTask.RunAsync(uiapp => function(uiapp), cancellationToken);
-        }
+        ) => revitTask.RunAsync(function, cancellationToken);
 
         /// <summary>
         /// Run code in Revit context.
         /// </summary>
-        public static Task<TResult> RunAsync<TResult>(
-            this IRevitTask revitTask,
-            Func<TResult> function,
-            CancellationToken cancellationToken
-        )
-        {
-            return revitTask.RunAsync(uiapp => function(), cancellationToken);
-        }
+        public Task<TResult> RunAsync<TResult>(Func<TResult> function, CancellationToken cancellationToken) =>
+            revitTask.RunAsync(_ => function(), cancellationToken);
 
         /// <summary>
         /// Run code in Revit context.
         /// </summary>
-        public static Task RunAsync(
-            this IRevitTask revitTask,
-            Action<UIApplication> action,
-            CancellationToken cancellationToken
-        )
-        {
-            return revitTask.RunAsync<object>(
+        public Task RunAsync(Action<UIApplication> action, CancellationToken cancellationToken) =>
+            revitTask.RunAsync<object>(
                 uiapp =>
                 {
                     action(uiapp);
@@ -98,18 +67,11 @@ namespace xml.Revit.Toolkit.Extensions
                 },
                 cancellationToken
             );
-        }
 
         /// <summary>
         /// Run code in Revit context.
         /// </summary>
-        public static Task RunAsync(
-            this IRevitTask revitTask,
-            Action action,
-            CancellationToken cancellationToken
-        )
-        {
-            return revitTask.RunAsync(uiapp => action(), cancellationToken);
-        }
+        public Task RunAsync(Action action, CancellationToken cancellationToken) =>
+            revitTask.RunAsync(_ => action(), cancellationToken);
     }
 }

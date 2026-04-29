@@ -1,4 +1,4 @@
-﻿/* 作    者: xml
+/* 作    者: xml
 ** 创建时间: 2024/2/16 20:26:06
 **
 ** Copyright 2024 by zedmoster
@@ -10,65 +10,63 @@
 ** documentation.
 */
 
-namespace xml.Revit.Toolkit.RevitTask.ExternalEventHandlers
+namespace xml.Revit.Toolkit.RevitTask.ExternalEventHandlers;
+
+/// <summary>
+/// AsyncExternalEventHandler
+/// </summary>
+/// <typeparam name="TResult"></typeparam>
+/// <remarks>
+/// AsyncExternalEventHandler
+/// </remarks>
+/// <param name="function"></param>
+public class AsyncExternalEventHandler<TResult>(Func<UIApplication, TResult> function)
+    : IExternalEventHandler
 {
+    private readonly TaskCompletionSource<TResult> _tcs = new();
+
     /// <summary>
-    /// AsyncExternalEventHandler
+    /// AsyncResult
     /// </summary>
-    /// <typeparam name="TResult"></typeparam>
-    /// <remarks>
-    /// AsyncExternalEventHandler
-    /// </remarks>
-    /// <param name="function"></param>
-    public class AsyncExternalEventHandler<TResult>(Func<UIApplication, TResult> function)
-        : IExternalEventHandler
+    /// <returns></returns>
+    public Task<TResult> AsyncResult()
     {
-        private readonly Func<UIApplication, TResult> function = function;
-        private readonly TaskCompletionSource<TResult> tcs = new();
+        return _tcs.Task;
+    }
 
-        /// <summary>
-        /// AsyncResult
-        /// </summary>
-        /// <returns></returns>
-        public Task<TResult> AsyncResult()
+    /// <summary>
+    /// This method is called to handle the external event.
+    /// </summary>
+    /// <param name="uiapp"></param>
+    public void Execute(UIApplication uiapp)
+    {
+        try
         {
-            return tcs.Task;
-        }
+            if (AsyncResult().IsCompleted)
+                return;
 
-        /// <summary>
-        /// This method is called to handle the external event.
-        /// </summary>
-        /// <param name="uiapp"></param>
-        public void Execute(UIApplication uiapp)
+            var result = function.Invoke(uiapp);
+            _tcs.TrySetResult(result);
+        }
+        catch (Exception ex)
         {
-            try
-            {
-                if (AsyncResult().IsCompleted)
-                    return;
-
-                var result = function.Invoke(uiapp);
-                tcs.TrySetResult(result);
-            }
-            catch (Exception ex)
-            {
-                tcs.TrySetException(ex);
-            }
+            _tcs.TrySetException(ex);
         }
+    }
 
-        /// <summary>
-        /// String identification of the event handler.
-        /// </summary>
-        public string GetName()
-        {
-            return GetType().Name;
-        }
+    /// <summary>
+    /// String identification of the event handler.
+    /// </summary>
+    public string GetName()
+    {
+        return GetType().Name;
+    }
 
-        /// <summary>
-        /// Create <see cref="Autodesk.Revit.UI.ExternalEvent"/> using the <see cref="AsyncExternalEventHandler{TResult}"/>
-        /// </summary>
-        public ExternalEvent Create()
-        {
-            return ExternalEvent.Create(this);
-        }
+    /// <summary>
+    /// Create <see cref="Autodesk.Revit.UI.ExternalEvent"/> using the <see cref="AsyncExternalEventHandler{TResult}"/>
+    /// </summary>
+    public ExternalEvent Create()
+    {
+        return ExternalEvent.Create(this);
     }
 }

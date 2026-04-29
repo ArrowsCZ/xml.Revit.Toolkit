@@ -10,26 +10,19 @@
 ** documentation.
 */
 
-using xml.Revit.Toolkit.Attributes;
-using xml.Revit.Toolkit.Utils;
+namespace xml.Revit.Toolkit;
 
-namespace xml.Revit.Toolkit
+/// <summary>
+/// 测试功能
+/// </summary>
+[Xml("测试", "请输入功能提示")]
+[Transaction(TransactionMode.Manual)]
+public sealed class Cmd : XmlExternalCommand
 {
     /// <summary>
-    /// 测试功能
+    ///
     /// </summary>
-    [Xml("测试", "请输入功能提示")]
-    [Transaction(TransactionMode.Manual)]
-    public sealed class Cmd : XmlExternalCommand
-    {
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="elements"></param>
-        protected override void Execute(ref string message, ElementSet elements)
-        {
-            XmlDoc.Print(uidoc.Document.Title);
-        }
-    }
+    /// <param name="message"></param>
+    /// <param name="elements"></param>
+    protected override void Execute(ref string message, ElementSet elements) => XmlDoc.Print(uidoc.Document.Title);
 }

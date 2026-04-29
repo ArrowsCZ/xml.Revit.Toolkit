@@ -1,4 +1,4 @@
-﻿/* 作    者: xml
+/* 作    者: xml
 ** 创建时间: 2024/6/23 12:39:52
 **
 ** Copyright 2024 by zedmoster
@@ -10,71 +10,49 @@
 ** documentation.
 */
 
-namespace xml.Revit.Toolkit.Extensions
+namespace xml.Revit.Toolkit.Extensions;
+
+/// <summary>
+/// Revit Object Extensions
+/// </summary>
+public static class RevitExtensions
 {
     /// <summary>
-    /// Revit Object Extensions
+    /// Throw null exception if <see cref="Autodesk.Revit.DB.Element"/> is null or invalid
     /// </summary>
-    public static class RevitExtensions
+    /// <param name="element"></param>
+    /// <exception cref="System.ArgumentNullException"></exception>
+    public static void ThrowIfNullOrInvalid(this Element element)
     {
-        /// <summary>
-        /// Throw null exception if <see cref="Autodesk.Revit.DB.Element"/> is null or invalid
-        /// </summary>
-        /// <param name="element"></param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public static void ThrowIfNullOrInvalid(this Element element)
-        {
-            if (element is null)
-            {
-                throw new ArgumentNullException(nameof(element));
-            }
-            if (!element.IsValidObject)
-            {
-                throw new System.ArgumentNullException(
-                    nameof(element),
-                    $"In Revit Element must be valid object"
-                );
-            }
-        }
+        if (element is null)
+            throw new ArgumentNullException(nameof(element));
+        if (!element.IsValidObject)
+            throw new ArgumentNullException(nameof(element), "In Revit Element must be valid object");
+    }
 
-        /// <summary>
-        /// Throw null exception if <see cref="Autodesk.Revit.DB.ElementId"/> is null or invalidElementId
-        /// </summary>
-        /// <param name="elementId"></param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public static void ThrowIfNullOrInvalid(this ElementId elementId)
-        {
-            if (elementId is null)
-            {
-                throw new ArgumentNullException(nameof(elementId));
-            }
-            if (elementId == ElementId.InvalidElementId)
-            {
-                throw new System.ArgumentNullException(
-                    nameof(elementId),
-                    $"In Revit ElementId is ElementId.InvalidElementId"
-                );
-            }
-        }
+    /// <summary>
+    /// Throw null exception if <see cref="Autodesk.Revit.DB.ElementId"/> is null or invalidElementId
+    /// </summary>
+    /// <param name="elementId"></param>
+    /// <exception cref="System.ArgumentNullException"></exception>
+    public static void ThrowIfNullOrInvalid(this ElementId elementId)
+    {
+        if (elementId is null)
+            throw new ArgumentNullException(nameof(elementId));
+        if (elementId == ElementId.InvalidElementId)
+            throw new ArgumentNullException(nameof(elementId), "In Revit ElementId is ElementId.InvalidElementId");
+    }
 
-        /// <summary>
-        /// Throw null exception if <see cref="Document"/> is null or invalid
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public static void ThrowIfNullOrInvalid(this Document doc)
-        {
-            if (doc is null)
-            {
-                throw new ArgumentNullException(nameof(doc));
-            }
-            if (!doc.IsValidObject)
-            {
-                throw new System.ArgumentNullException(
-                    nameof(doc),
-                    $"In Revit Document must be valid object"
-                );
-            }
-        }
+    /// <summary>
+    /// Throw null exception if <see cref="Document"/> is null or invalid
+    /// </summary>
+    /// <param name="doc"></param>
+    /// <exception cref="System.ArgumentNullException"></exception>
+    public static void ThrowIfNullOrInvalid(this Document doc)
+    {
+        if (doc is null)
+            throw new ArgumentNullException(nameof(doc));
+        if (!doc.IsValidObject)
+            throw new ArgumentNullException(nameof(doc), "In Revit Document must be valid object");
     }
 }

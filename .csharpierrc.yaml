@@ -1,0 +1,14 @@
+# CSharpier 配置文件
+# 使用 YAML 格式，支持原生注释
+
+# 每行最大字符数，超过会自动换行
+printWidth: 120
+
+# 是否使用 Tab 缩进，false 表示使用空格
+useTabs: false
+
+# 缩进空格数（当 useTabs 为 false 时生效）
+indentSize: 4
+
+# 换行符风格：auto 自动检测，可选 "lf" 或 "crlf"
+endOfLine: auto

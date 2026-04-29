@@ -19,7 +19,8 @@ Autodesk Revit 2018 - 2027 Revit快速开发工具包
 
 - C# 13
 - .NET Framework 4.8
-- .NET 8
+- .NET 8.0
+- .NET 10.0
 
 ## Website
 
