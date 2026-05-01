@@ -13,13 +13,20 @@
         <PackageReference Include="Nice3point.Revit.Sdk" Version="6.2.1" />
     </ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
-		<PackageReference Include="System.Resources.Extensions" Version="10.0.7" />
-	</ItemGroup>
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">
-		<PackageReference Include="System.Resources.Extensions" Version="10.0.7" />
-	</ItemGroup>
-	
+    <!-- 
+    System.Resources.Extensions
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    此包的功能在 .NET 10.0+ 中已内置到运行时和 SDK，无需显式引用。
+    仅对 .NET Framework 4.8 和 .NET 8.0 保留，以支持 .resx 资源编译。
+    
+    从 .NET 10 SDK 开始，包修剪（Package Pruning）默认启用，对于 net10.0+ 目标框架会直接忽略此类冗余引用并产生 NU1510 警告。
+    
+    references: https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/10.0/nu1510-pruned-references
+    -->
+    <ItemGroup Condition="'$(TargetFramework)' == 'net48' Or '$(TargetFramework)' == 'net8.0-windows'">
+        <PackageReference Include="System.Resources.Extensions" Version="10.0.7" />
+    </ItemGroup>
+
     <PropertyGroup>
         <UseWPF>true</UseWPF>
         <LangVersion>latest</LangVersion>
@@ -74,7 +81,7 @@
         <RevitVersion>2027</RevitVersion>
         <TargetFramework>net10.0-windows</TargetFramework>
     </PropertyGroup>
-    
+
     <PropertyGroup Condition="$(Configuration.Contains('R18'))">
         <DefineConstants>$(DefineConstants);REVIT2018;REVIT2018_OR_GREATER</DefineConstants>
     </PropertyGroup>
